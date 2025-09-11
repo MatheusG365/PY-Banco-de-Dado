@@ -1,0 +1,101 @@
+/* Resetando alguns estilos padrões do navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Definindo o estilo do body */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
+}
+
+/* Estilo para o cabeçalho */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Título do cabeçalho */
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* Estilo das mensagens de flash */
+.flash-messages {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.flash {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.flash.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.flash.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.flash.info {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Estilo para o conteúdo principal */
+main {
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Título da lista de livros */
+main h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para as células da tabela */
+th, td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Estilo para o cabeçalho da tabela */
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Estilo para as linhas alternadas da tabela */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Estilo para o hover nas linhas da tabela */
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
