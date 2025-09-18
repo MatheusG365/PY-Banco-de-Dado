@@ -5,14 +5,105 @@ app = Flask(__name__)
 app.secret_key = 'OI'
 
 host = 'localhost'
-database = r'C:\Users\Aluno\Downloads\1-09.FDB'
+database = r'C:\Users\Aluno\Documents\PY-Banco-de-Dado\1-09.FDB'
 user = 'SYSDBA'
 pasword = 'sysdba'
 
 con = fdb.connect(host=host, database=database,user=user, password=pasword)
 
+
+
 @app.route('/')
 def index():
+    cursor = con.cursor()
+    cursor.execute("SELECT p.ID_PESSOA, p.NOME, p.EMAIL FROM PESSOA p")
+    usuarios = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('usuarios.html', usuarios=usuarios)
+
+@app.route('/login')
+def login():
+    return render_template('login.html', titulo="Login")
+
+@app.route('/logar', methods=['POST'])
+def logar():
+    email = request.form['email']
+    senha = request.form['senha']
+
+    cursor = con.cursor()
+    try:
+        cursor.execute("SELECT p.email, p.senha FROM PESSOA p WHERE p.email = ?", (email,))
+        usuario = cursor.fetchone()
+        if usuario :
+            if senha == usuario[1]:
+                flash("Login realizado com sucesso")
+                return redirect(url_for('livros'))
+
+    finally:
+        cursor.close
+    flash("Senha ou email incorreto")
+    return redirect(url_for('login'))
+
+@app.route('/cadatrar')
+def cadastrar():
+    return render_template('cadastro.html', titulo="Cadastro")
+
+@app.route('/cadastro', methods=['GET', 'POST'])
+def cadastro():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+
+        cursor = con.cursor()
+
+        try:
+            cursor.execute('Select 1 from PESSOA p where p.EMAIL = ?', (email,))
+            if cursor.fetchone(): #se existir algum usuario com o email passado
+                flash("Erro: Email já cadastrado", 'error')
+                return redirect(url_for('login'))
+
+            cursor.execute('INSERT INTO PESSOA ( NOME, EMAIL, SENHA)VALUES (?,?, ?)', (nome, email, senha))
+            con.commit()
+        finally:
+            cursor.close()
+        flash('Usuario cadastrado com sucesso', 'success')
+    return redirect(url_for('login'))
+
+@app.route('/editarusuario')
+def editarusuario():
+    return render_template('editarusuario.html', titulo="Editar Usuario")
+
+@app.route('/usuarioedit/<int:id>', methods=['GET', 'POST'])
+def usuarioedit(id):
+    cursor = con.cursor()
+    cursor.execute("SELECT ID_PESSOA , NOME, EMAIL, SENHA FROM pessoa WHERE id_pessoa = ?", (id,))
+    usuarios = cursor.fetchone()
+
+    if not usuarios:
+        cursor.close()
+        flash('Usuario não encontrado')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+
+        cursor.execute('update pessoa set nome = ?, email = ?, senha= ? where id_pessoa = ?',
+                       (nome, email, senha, id))
+
+        con.commit()
+        flash('Usuario atulizado com sucesso')
+        return redirect(url_for('index'))
+
+    cursor.close()
+    return render_template('editarusuario.html', usuario=usuarios, titulo='Editar Usuario')
+
+@app.route('/livros')
+def livros():
     cursor = con.cursor()
     cursor.execute("SELECT l.ID_LIVRO, l.TITULO, l.AUTOR, l.ANO_PUBLICADO FROM LIVRO l")
     livros = cursor.fetchall()
