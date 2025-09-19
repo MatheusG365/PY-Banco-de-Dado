@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Livros</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body>
-<header>
+    <header>
         <h1>Usuario</h1>
         <a href="login">login</a>
-        <a href="cadatrar">cadastrar</a>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        <a href="cadatrar">cadastrar</a> {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
 
     </header>
     <main>
@@ -40,6 +39,9 @@
                     <td>{{ usuario[2] }}</td>
                     <td>
                         <a href="{{ url_for('usuarioedit', id=usuario[0]) }}">Editar</a>
+                        <form action="{{ url_for('delete2', id=usuario[0]) }}" method="post" style="display:inline;">
+                            <button type="submit">Deletar</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
@@ -47,4 +49,5 @@
         </table>
     </main>
 </body>
+
 </html>

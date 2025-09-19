@@ -5,9 +5,9 @@ app = Flask(__name__)
 app.secret_key = 'OI'
 
 host = 'localhost'
-database = r'C:\Users\Aluno\Documents\PY-Banco-de-Dado\1-09.FDB'
+database = r'C:\Users\mathe\OneDrive\Documentos\GitHub\PY-Banco-de-Dado\1-09.FDB'
 user = 'SYSDBA'
-pasword = 'sysdba'
+pasword = 'masterkey'
 
 con = fdb.connect(host=host, database=database,user=user, password=pasword)
 
@@ -102,6 +102,21 @@ def usuarioedit(id):
     cursor.close()
     return render_template('editarusuario.html', usuario=usuarios, titulo='Editar Usuario')
 
+@app.route('/delete2/<int:id>', methods=['POST'])
+def delete2(id):
+    cursor = con.cursor()  # Abre o cursor
+    try:
+        cursor.execute('delete from pessoa where id_pessoa = ?', (id,))
+        con.commit()
+        flash('Usuario removido com sucesso')
+
+    except Exception as e:
+        con.rollback()
+        flash('Erro ao delete o usuario')
+    finally:
+        cursor.close()
+        return redirect(url_for('index'))
+
 @app.route('/livros')
 def livros():
     cursor = con.cursor()
@@ -180,7 +195,7 @@ def delete(id):
         flash('Erro ao delete o livro')
     finally:
         cursor.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('livros'))
 
 if __name__ == '__main__':
     app.run(debug=True)
